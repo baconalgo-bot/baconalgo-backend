@@ -1,0 +1,22 @@
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+{
+  "name": "baconalgo-frontend",
+  "version": "1.0.0",
+  "description": "BaconAlgo Trading Platform - Frontend",
+  "scripts": {
+    "dev": "npx serve . -p 3000",
+    "deploy": "vercel --prod",
+    "deploy-preview": "vercel"
+  },
+  "keywords": [
+    "trading",
+    "baconalgo",
+    "scanner",
+    "ibkr",
+    "bitget"
+  ],
+  "author": "BaconAlgo Team",
+  "license": "MIT"
+}
