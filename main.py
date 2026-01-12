@@ -2,16 +2,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
-import random
 from datetime import datetime
-import os
 
-app = FastAPI(title="🥓 BaconAlgo API", version="1.0.0")
+app = FastAPI(title="BaconAlgo API", version="1.0.0")
 
-# CORS pour ton frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://baconalgo.com", "https://baconalgo.vercel.app", "*"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -26,66 +23,29 @@ class Signal(BaseModel):
     target: float
     stop: float
     grade: str
-    confluence: int
 
 @app.get("/")
 async def root():
-    return {
-        "message": "🥓 BaconAlgo API LIVE!",
-        "status": "🚀 Ready to scan!",
-        "endpoints": ["/api/scanner/scan", "/api/signals", "/api/trading/ibkr/connect"]
-    }
+    return {"message": "BaconAlgo API LIVE!", "endpoints": ["/api/scanner/scan"]}
 
 @app.post("/api/scanner/scan")
-async def scan_markets():
-    """Génère signaux mock parfaits pour ton dashboard"""
+async def scan():
     signals = [
-        Signal(
-            ticker="GOOGL",
-            timeframe="1D",
-            direction="LONG",
-            score=98,
-            entry=142.50,
-            target=148.20,
-            stop=140.10,
-            grade="LEGENDARY",
-            confluence=5
-        ),
-        Signal(
-            ticker="QQQ",
-            timeframe="4H", 
-            direction="SHORT",
-            score=92,
-            entry=412.80,
-            target=398.50,
-            stop=416.20,
-            grade="LEGENDARY",
-            confluence=4
-        ),
-        Signal(
-            ticker="TSLA",
-            timeframe="1D",
-            direction="LONG",
-            score=87,
-            entry=248.90,
-            target=262.40,
-            stop=245.00,
-            grade="EPIC",
-            confluence=3
-        ),
-        Signal(
-            ticker="AAPL",
-            timeframe="1H",
-            direction="LONG",
-            score=95,
-            entry=195.20,
-            target=202.10,
-            stop=192.80,
-            grade="LEGENDARY",
-            confluence=5
-        )
+        {"ticker": "GOOGL", "timeframe": "1D", "direction": "LONG", "score": 98, "entry": 142.50, "target": 148.20, "stop": 140.10, "grade": "LEGENDARY"},
+        {"ticker": "QQQ", "timeframe": "4JUdGzvrMFDWrUUwY3toJATSeNwjn54LkCnKBPRzDuhzi5vSepHfUckJNxRL2gjkNrSqtCoRUrEDAgRwsQvVCjZbRyFTLRNyDmT1a1boZVLEGENDARY"},
+        {"ticker": "TSLA", "timeframe": "1D", "direction": "LONG", "score": 87, "entry": 248.90, "target": 262.40, "stop": 245.00, "grade": "EPIC"},
+        {"ticker": "AAPL", "timeframe": "1H", "direction": "LONG", "score": 95, "entry": 195.20, "target": 202.10, "stop": 192.80, "grade": "LEGENDARY"}
     ]
-    
-    return {
-        "success": True,
-        "signals": [s.dict() for s in signa
+    return {"success": True, "signals": signals}
+
+@app.post("/api/trading/ibkr/connect")
+async def ibkr(mode: str = "paper"):
+    return {"success": True, "status": "IBKR " + mode.upper() + " connected"}
+
+@app.post("/api/trading/bitget/connect")
+async def bitget(mode: str = "demo"):
+    return {"success": True, "status": "Bitget " + mode.upper() + " connected"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)
